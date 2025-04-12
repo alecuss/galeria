@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>31.01.2025 💕</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>31.01.2025 💕</h1>
+    </header>
+    <main>
+        <section class="upload-section">
+            <label for="photoInput" class="upload-btn">Subir Foto</label>
+            <input type="file" id="photoInput" accept="image/*" multiple>
+            <div id="dropZone" class="drop-zone">O arrastra tus fotos aquí</div>
+        </section>
+        <section id="gallery" class="gallery"></section>
+    </main>
+
+    <!-- Modal para recortar -->
+    <div id="cropModal" class="modal">
+        <div class="modal-content">
+            <img id="imageToCrop" src="">
+            <div class="modal-buttons">
+                <button id="cropBtn">Recortar</button>
+                <button id="cancelCropBtn">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
