@@ -12,7 +12,7 @@ body {
 
 header {
     background-color: #ffe4e1;
-    padding: 20px;
+    padding: 15px;
     text-align: center;
     position: fixed;
     width: 100%;
@@ -22,29 +22,30 @@ header {
 }
 
 header h1 {
-    font-size: 2.5em;
+    font-size: 2em;
     color: #d81b60;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 main {
-    margin-top: 100px;
-    padding: 20px;
+    margin-top: 80px;
+    padding: 15px;
 }
 
 .upload-section {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 .upload-btn {
     background-color: #f06292;
     color: white;
-    padding: 10px 20px;
-    border-radius: 25px;
+    padding: 8px 16px;
+    border-radius: 20px;
     cursor: pointer;
-    font-size: 1.2em;
+    font-size: 1em;
     transition: transform 0.2s;
+    display: inline-block;
 }
 
 .upload-btn:hover {
@@ -53,12 +54,12 @@ main {
 
 .drop-zone {
     border: 2px dashed #f06292;
-    padding: 20px;
+    padding: 15px;
     margin: 10px auto;
-    width: 80%;
-    max-width: 500px;
+    width: 90%;
+    max-width: 400px;
     background-color: #fff;
-    border-radius: 10px;
+    border-radius: 8px;
     transition: background-color 0.3s;
 }
 
@@ -68,15 +69,15 @@ main {
 
 .gallery {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
-    padding: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+    padding: 15px;
 }
 
 .polaroid {
     background-color: white;
-    padding: 15px 15px 40px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 10px 10px 30px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
     transform: rotate(-2deg);
     transition: transform 0.3s;
     position: relative;
@@ -94,9 +95,9 @@ main {
 
 .polaroid-buttons {
     position: absolute;
-    bottom: 10px;
-    left: 15px;
-    right: 15px;
+    bottom: 8px;
+    left: 10px;
+    right: 10px;
     display: flex;
     justify-content: space-between;
 }
@@ -104,7 +105,7 @@ main {
 .polaroid-btn {
     background: none;
     border: none;
-    font-size: 1.2em;
+    font-size: 1em;
     cursor: pointer;
     transition: color 0.2s;
 }
@@ -132,10 +133,10 @@ main {
 
 .modal-content {
     background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    max-width: 90%;
-    max-height: 90%;
+    padding: 15px;
+    border-radius: 8px;
+    max-width: 95%;
+    max-height: 85%;
     overflow: auto;
 }
 
@@ -150,11 +151,12 @@ main {
 }
 
 .modal-buttons button {
-    padding: 10px 20px;
-    margin: 0 10px;
+    padding: 8px 16px;
+    margin: 0 8px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    font-size: 0.9em;
 }
 
 #cropBtn {
@@ -164,4 +166,73 @@ main {
 
 #cancelCropBtn {
     background-color: #ccc;
+}
+
+/* Media Queries para responsividad */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 1.5em;
+    }
+
+    main {
+        margin-top: 60px;
+        padding: 10px;
+    }
+
+    .upload-btn {
+        padding: 6px 12px;
+        font-size: 0.9em;
+    }
+
+    .drop-zone {
+        width: 95%;
+        padding: 10px;
+        font-size: 0.9em;
+    }
+
+    .gallery {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 10px;
+    }
+
+    .polaroid {
+        padding: 8px 8px 25px;
+    }
+
+    .polaroid-buttons {
+        bottom: 6px;
+    }
+
+    .polaroid-btn {
+        font-size: 0.9em;
+    }
+
+    .modal-content {
+        max-width: 90%;
+        padding: 10px;
+    }
+
+    .modal-buttons button {
+        padding: 6px 12px;
+        font-size: 0.8em;
+    }
+}
+
+@media (max-width: 480px) {
+    header h1 {
+        font-size: 1.2em;
+    }
+
+    main {
+        margin-top: 50px;
+    }
+
+    .gallery {
+        grid-template-columns: 1fr;
+    }
+
+    .polaroid {
+        max-width: 200px;
+        margin: 0 auto;
+    }
 }
