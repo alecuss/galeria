@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let cropper;
     let currentPhotoId;
 
-    // Cargar fotos guardadas
+    // Cargar fotos guardadas al iniciar
     loadPhotos();
 
     // Subir fotos
@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
     dropZone.addEventListener('drop', (e) => {
         e.preventDefault();
         dropZone.classList.remove('dragover');
-        handleFiles(e.dataloadedPhotos.lengthTransfer.getFiles());
+        handleFiles(e.dataTransfer.files);
     });
 
     function handleFiles(e) {
@@ -46,14 +46,21 @@ document.addEventListener('DOMContentLoaded', () => {
         cropper = new Cropper(imageToCrop, {
             aspectRatio: 1,
             viewMode: 1,
+            responsive: true,
         });
     }
 
     cropBtn.addEventListener('click', () => {
         const croppedCanvas = cropper.getCroppedCanvas();
         const polaroidCanvas = createPolaroid(croppedCanvas);
-        savePhoto(polaroidCanvas.toDataURL());
-        addPhotoToGallery(polaroidCanvas.toDataURL());
+        const dataURL = polaroidCanvas.toDataURL('image/jpeg');
+        const photoId = currentPhotoId || Date.now();
+        savePhoto(photoId, dataURL);
+        if (!currentPhotoId) {
+            addPhotoToGallery(dataURL, photoId, 0);
+        } else {
+            updatePhotoInGallery(photoId, dataURL);
+        }
         closeCropModal();
     });
 
@@ -61,8 +68,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function closeCropModal() {
         cropModal.style.display = 'none';
-        cropper.destroy();
+        if (cropper) cropper.destroy();
         imageToCrop.src = '';
+        currentPhotoId = null;
     }
 
     // Crear efecto Polaroid
@@ -79,20 +87,38 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Guardar y cargar fotos
-    function savePhoto(dataURL) {
-        const photos = JSON.parse(localStorage.getItem('photos') || '[]');
-        const photoId = Date.now();
-        photos.push({ id: photoId, src: dataURL, likes: 0 });
-        localStorage.setItem('photos', JSON.stringify(photos));
+    function savePhoto(id, dataURL) {
+        try {
+            let photos = JSON.parse(localStorage.getItem('photos') || '[]');
+            const existingPhotoIndex = photos.findIndex(photo => photo.id === id);
+            if (existingPhotoIndex >= 0) {
+                photos[existingPhotoIndex].src = dataURL;
+            } else {
+                photos.push({ id, src: dataURL, likes: 0 });
+            }
+            localStorage.setItem('photos', JSON.stringify(photos));
+        } catch (e) {
+            console.error('Error saving photo:', e);
+        }
     }
 
     function loadPhotos() {
-        const photos = JSON.parse(localStorage.getItem('photos') || '[]');
-        photos.forEach(photo => addPhotoToGallery(photo.src, photo.id, photo.likes));
+        try {
+            const photos = JSON.parse(localStorage.getItem('photos') || '[]');
+            gallery.innerHTML = ''; // Limpiar galería antes de cargar
+            photos.forEach(photo => {
+                if (photo.src && photo.id) {
+                    addPhotoToGallery(photo.src, photo.id, photo.likes || 0);
+                }
+            });
+        } catch (e) {
+            console.error('Error loading photos:', e);
+            localStorage.setItem('photos', '[]'); // Reiniciar si hay error
+        }
     }
 
     // Añadir foto a la galería
-    function addPhotoToGallery(src, id = Date.now(), likes = 0) {
+    function addPhotoToGallery(src, id, likes) {
         const polaroid = document.createElement('div');
         polaroid.className = 'polaroid';
         polaroid.dataset.id = id;
@@ -132,18 +158,34 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Actualizar foto en la galería (para edición)
+    function updatePhotoInGallery(id, src) {
+        const polaroid = gallery.querySelector(`.polaroid[data-id="${id}"]`);
+        if (polaroid) {
+            polaroid.querySelector('img').src = src;
+        }
+    }
+
     function deletePhoto(id) {
-        let photos = JSON.parse(localStorage.getItem('photos') || '[]');
-        photos = photos.filter(photo => photo.id !== id);
-        localStorage.setItem('photos', JSON.stringify(photos));
+        try {
+            let photos = JSON.parse(localStorage.getItem('photos') || '[]');
+            photos = photos.filter(photo => photo.id !== id);
+            localStorage.setItem('photos', JSON.stringify(photos));
+        } catch (e) {
+            console.error('Error deleting photo:', e);
+        }
     }
 
     function updateLikes(id, likes) {
-        const photos = JSON.parse(localStorage.getItem('photos') || '[]');
-        const photo = photos.find(p => p.id === id);
-        if (photo) {
-            photo.likes = likes;
-            localStorage.setItem('photos', JSON.stringify(photos));
+        try {
+            let photos = JSON.parse(localStorage.getItem('photos') || '[]');
+            const photo = photos.find(p => p.id === id);
+            if (photo) {
+                photo.likes = likes;
+                localStorage.setItem('photos', JSON.stringify(photos));
+            }
+        } catch (e) {
+            console.error('Error updating likes:', e);
         }
     }
 });
